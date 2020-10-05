@@ -1,4 +1,5 @@
-import {Inject, Injectable} from '@angular/core';
+import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
+import {isPlatformBrowser} from '@angular/common';
 import {CartItem} from '../classes/cart-item';
 import {BrowserStorageCartService} from './browser-storage-cart.service';
 import {BrowserStorageServiceConfiguration} from '../interfaces/browser-storage-service-configuration';
@@ -11,9 +12,11 @@ import {CART_SERVICE_CONFIGURATION} from './service-configuration.token';
  */
 @Injectable()
 export class SessionStorageCartService<T extends CartItem> extends BrowserStorageCartService<T> {
-  constructor(@Inject(CART_ITEM_CLASS) itemClass, @Inject(CART_SERVICE_CONFIGURATION) configuration: BrowserStorageServiceConfiguration) {
+  constructor(@Inject(CART_ITEM_CLASS) itemClass, @Inject(CART_SERVICE_CONFIGURATION) configuration: BrowserStorageServiceConfiguration, @Inject(PLATFORM_ID) private platformId: Object) {
     super(itemClass, configuration) /* istanbul ignore next */;
-    this.storage = window.sessionStorage;
+    if (isPlatformBrowser(this.platformId)) {
+      this.storage = window.sessionStorage;
+    }
     this.restore();
   }
 }
