@@ -1,4 +1,4 @@
-import {ModuleWithProviders, NgModule} from '@angular/core';
+import {ModuleWithProviders, NgModule, PLATFORM_ID} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
 
@@ -66,7 +66,7 @@ export class ShoppingCartModule {
         {
           provide: CartService,
           useFactory: serviceFactory,
-          deps: [CART_SERVICE_TYPE, CART_ITEM_CLASS, CART_SERVICE_CONFIGURATION]
+          deps: [CART_SERVICE_TYPE, CART_ITEM_CLASS, CART_SERVICE_CONFIGURATION, PLATFORM_ID]
         }
       ],
     };

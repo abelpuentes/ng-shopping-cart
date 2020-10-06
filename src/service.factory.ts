@@ -9,12 +9,12 @@ import {CART_SERVICE_TYPE} from './services/service-type.token';
 import {CART_SERVICE_CONFIGURATION} from './services/service-configuration.token';
 import {CartService} from './services/cart.service';
 
-export function serviceFactory<T extends CartItem>(serviceType, itemClass, configuration): CartService<T> {
+export function serviceFactory<T extends CartItem>(serviceType, itemClass, configuration, platformId): CartService<T> {
   switch (serviceType) {
     case 'localStorage':
-      return new LocalStorageCartService<T>(itemClass, configuration);
+      return new LocalStorageCartService<T>(itemClass, configuration, platformId);
     case 'sessionStorage':
-      return new SessionStorageCartService<T>(itemClass, configuration);
+      return new SessionStorageCartService<T>(itemClass, configuration, platformId);
     default:
       return new MemoryCartService<T>();
   }
