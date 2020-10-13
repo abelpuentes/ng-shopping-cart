@@ -13,19 +13,19 @@ export function browserStorageSuite(browserStorage: any, cartService: any) {
 
       it('should initialize the storage key provided as option', () => {
         expect(browserStorage.getItem(storageKey)).toBeNull();
-        const service = new cartService(BaseCartItem, {storageKey});
+        const service = new cartService(BaseCartItem, {storageKey}, 'browser');
         expect(service['storageKey']).toEqual(storageKey);
       });
 
       it('should initialize remember the option to clear on errors', () => {
-        let service = new cartService(BaseCartItem);
+        let service = new cartService(BaseCartItem, {}, 'browser');
         expect(service['clearOnError']).toEqual(true);
-        service = new cartService(BaseCartItem, {clearOnError: false});
+        service = new cartService(BaseCartItem, {clearOnError: false}, 'browser');
         expect(service['clearOnError']).toEqual(false);
       });
 
       it('should store a reference to the item class provided as option', () => {
-        const service = new cartService(TestCartItem, {});
+        const service = new cartService(TestCartItem, {}, 'browser');
         expect(service['storageKey']).toEqual('NgShoppingCart');
         expect(service['itemClass']).toEqual(TestCartItem);
       });
@@ -42,7 +42,7 @@ export function browserStorageSuite(browserStorage: any, cartService: any) {
 
       beforeEach(() => {
         browserStorage.removeItem('TestNgCartLocal');
-        service = new cartService(BaseCartItem, {storageKey});
+        service = new cartService(BaseCartItem, {storageKey}, 'browser');
       });
 
       it('should count items', () => {
@@ -116,7 +116,7 @@ export function browserStorageSuite(browserStorage: any, cartService: any) {
 
         beforeEach(() => {
           browserStorage.removeItem(storageKey);
-          service = new cartService(BaseCartItem, {storageKey});
+          service = new cartService(BaseCartItem, {storageKey}, 'browser');
         });
 
         it('should be able to save and restore classes with the constructor', () => {
@@ -125,7 +125,7 @@ export function browserStorageSuite(browserStorage: any, cartService: any) {
           const contents = JSON.parse(browserStorage.getItem(storageKey));
           expect(contents.items).toBeTruthy();
           expect(contents.items.length).toEqual(1);
-          const otherService = new cartService(BaseCartItem, {storageKey});
+          const otherService = new cartService(BaseCartItem, {storageKey}, 'browser');
           const otherItem = otherService.getItem(1);
           expect(otherItem).toBeTruthy();
           expect(otherItem.getId()).toEqual(1);
@@ -151,7 +151,7 @@ export function browserStorageSuite(browserStorage: any, cartService: any) {
         it('should throw an error if the stored info is not a valid cart object', () => {
           browserStorage.setItem(storageKey, '[]');
           const testErrorFn = () => {
-            service = new cartService(BaseCartItem, {storageKey, clearOnError: false});
+            service = new cartService(BaseCartItem, {storageKey, clearOnError: false}, 'browser');
           };
           expect(testErrorFn).toThrowError(`The object found under the key ${storageKey} is not a valid cart object`);
         });
@@ -159,7 +159,7 @@ export function browserStorageSuite(browserStorage: any, cartService: any) {
         it('should throw an error if the stored info is not a valid JSON', () => {
           browserStorage.setItem(storageKey, 'bla');
           const testErrorFn = () => {
-            service = new cartService(BaseCartItem, {storageKey, clearOnError: false});
+            service = new cartService(BaseCartItem, {storageKey, clearOnError: false}, 'browser');
           };
           expect(testErrorFn).toThrowError(/^Unexpected token/);
         });
@@ -167,7 +167,7 @@ export function browserStorageSuite(browserStorage: any, cartService: any) {
         it('should not throw an error if an invalid cart is stored but clear on error is true', () => {
           browserStorage.setItem(storageKey, '[]');
           const testClearFn = () => {
-            service = new cartService(BaseCartItem, {storageKey});
+            service = new cartService(BaseCartItem, {storageKey}, 'browser');
           };
           expect(testClearFn).not.toThrow();
           const storedValue = browserStorage.getItem(storageKey);
@@ -188,7 +188,7 @@ export function browserStorageSuite(browserStorage: any, cartService: any) {
 
         beforeEach(() => {
           browserStorage.removeItem('TestNgCartLocal');
-          service = new cartService(TestCartItem, {storageKey});
+          service = new cartService(TestCartItem, {storageKey}, 'browser');
         });
 
         it('should be able to save and restore classes with the fromJSON method', () => {
@@ -197,7 +197,7 @@ export function browserStorageSuite(browserStorage: any, cartService: any) {
           const contents = JSON.parse(browserStorage.getItem(storageKey));
           expect(contents.items).toBeTruthy();
           expect(contents.items.length).toEqual(1);
-          const otherService = new cartService(TestCartItem, {storageKey});
+          const otherService = new cartService(TestCartItem, {storageKey}, 'browser');
           const otherItem = otherService.getItem(1);
           expect(otherItem).toBeTruthy();
           expect(otherItem.getId()).toEqual(1);

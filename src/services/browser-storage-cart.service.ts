@@ -44,11 +44,13 @@ export abstract class BrowserStorageCartService<T extends CartItem> extends Memo
   }
 
   protected save() {
-    this.storage.setItem(this.storageKey, JSON.stringify(this.toObject()));
+    if (this.storage) {
+      this.storage.setItem(this.storageKey, JSON.stringify(this.toObject()));
+    }    
   }
 
   protected restore() {
-    if (!this.storage.getItem(this.storageKey)) {
+    if (!this.storage || !this.storage.getItem(this.storageKey)) {
       this.resetStorage(false);
       return;
     }
